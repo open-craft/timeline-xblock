@@ -60,6 +60,7 @@ function TimelineXBlockEdit(runtime, element) {
                 });
             }
         });
+        currentEditIndex = index;
         const item = timelineItems[index];
         $(element).find('.timeline-item-title').text(`Item (${index + 1})`);
         $(element).find('#timeline-item-date').val(item.start);
