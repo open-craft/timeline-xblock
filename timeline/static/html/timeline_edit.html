@@ -1,0 +1,53 @@
+{% load i18n %}
+<div class="wrapper-comp-settings is-active editor-with-buttons" id="settings-tab">
+  <div class="timeline-builder">
+    <section class="tab basic-tab">
+      <div class="form-group">
+        <label for="timeline-title">{% trans 'Title:' %}</label>
+        <input type="text" id="timeline-title" value="{{title}}">
+      </div>
+      <div class="form-group">
+        <label for="timeline-description">{% trans 'Description:' %}</label>
+        <textarea id="timeline-description">{{description}}</textarea>
+      </div>
+    </section>
+    <div class="timeline-editor hidden">
+      <div class="timeline-item-list-container">
+        <button type="button" class="add-timeline-item">{% trans '+ Add timeline item' %}</button>
+        <ul class="timeline-item-list">
+        </ul>
+      </div>
+      <div class="timeline-item-details-container">
+        <div class="timeline-item-details" style="display: none;">
+          <h3>{% trans 'Timeline ' %}<span class="timeline-item-title"></span></h3>
+          <div class="form-group">
+            <label for="timeline-item-date">{% trans 'Date:' %}</label>
+            <input type="text" id="timeline-item-date">
+          </div>
+          <div class="form-group">
+            <label for="timeline-item-content">{% trans 'Title:' %}</label>
+            <input type="text" id="timeline-item-content">
+          </div>
+          <div class="form-group">
+            <label for="timeline-item-description">{% trans 'Description:' %}</label>
+            <input type="text" id="timeline-item-description" class="tinymce-editor">
+          </div>
+          <button type="button" class="save-timeline-item">{% trans 'Save item' %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="xblock-actions">
+    <ul>
+      <li class="action-item">
+        <a href="#" class="button action-primary continue-button">{% trans 'Continue' %}</a>
+      </li>
+      <li class="action-item hidden">
+        <a href="#" class="button action-primary save-button">{% trans 'Save' %}</a>
+      </li>
+      <li class="action-item">
+        <a href="#" class="button cancel-button">{% trans 'Cancel' %}</a>
+      </li>
+    </ul>
+  </div>
+</div>
