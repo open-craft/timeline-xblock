@@ -12,6 +12,13 @@ function TimelineXBlock(runtime, element) {
                     console.error("Timeline container not found");
                     return;
                 }
+                data.forEach(item => {
+                    if (item.milestone) {
+                        item.className = 'milestone';
+                    } else {
+                        item.className = 'event';
+                    }
+                });
                 var items = new vis.DataSet(data);
                 var options = {};
                 var timeline = new vis.Timeline(container, items, options);

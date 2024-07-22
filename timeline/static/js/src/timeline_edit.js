@@ -66,6 +66,7 @@ function TimelineXBlockEdit(runtime, element) {
         $(element).find('#timeline-item-date').val(item.start);
         $(element).find('#timeline-item-content').val(item.content);
         $(element).find('#timeline-item-description').val(item.description);
+        $(element).find('.timeline-item-milestone').prop('checked', !!item.milestone);
         $(element).find('.timeline-item-details').show();
     }
 
@@ -81,7 +82,7 @@ function TimelineXBlockEdit(runtime, element) {
     });
 
     $(element).on('click', '.add-timeline-item', function() {
-        const newItem = { content: '', start: '', description: ''};
+        const newItem = { content: '', start: '', description: '', milestone: false};
         timelineItems.push(newItem);
         renderTimelineItemList();
         renderTimelineItemDetails(timelineItems.length - 1);
@@ -92,13 +93,14 @@ function TimelineXBlockEdit(runtime, element) {
             timelineItems[currentEditIndex].start = $(element).find('#timeline-item-date').val();
             timelineItems[currentEditIndex].content = $(element).find('#timeline-item-content').val();
             timelineItems[currentEditIndex].description = tinymce.get('timeline-item-description').getContent();
+            timelineItems[currentEditIndex].milestone = $(element).find('.timeline-item-milestone').prop('checked');
             renderTimelineItemList();
             $(element).find('.timeline-item-details').hide();
         }
     });
 
     $(element).find('.continue-button').bind('click', function() {
-        $(element).find('.basic-tab').addClass('hidden');
+        $(element).find('.basic-settings-tab').addClass('hidden');
         $(element).find('.timeline-editor').removeClass('hidden');
         $(this).addClass('hidden');
         $(element).find('.save-button').parent().removeClass('hidden');
@@ -109,6 +111,12 @@ function TimelineXBlockEdit(runtime, element) {
         const data = {
             title: $(element).find('#timeline-title').val(),
             description: $(element).find('#timeline-description').val(),
+            event_background_color: $(element).find('#event-background-color').val(),
+            event_border_color: $(element).find('#event-border-color').val(),
+            event_text_color: $(element).find('#event-text-color').val(),
+            milestone_background_color: $(element).find('#milestone-background-color').val(),
+            milestone_border_color: $(element).find('#milestone-border-color').val(),
+            milestone_text_color: $(element).find('#milestone-text-color').val(),
             timeline_data: JSON.stringify(collectTimelineData())
         };
         if ('notify' in runtime) { //xblock workbench runtime does not have `notify` method

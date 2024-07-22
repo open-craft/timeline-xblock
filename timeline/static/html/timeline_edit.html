@@ -1,7 +1,7 @@
 {% load i18n %}
 <div class="wrapper-comp-settings is-active editor-with-buttons" id="settings-tab">
   <div class="timeline-builder">
-    <section class="tab basic-tab">
+    <section class="tab basic-settings-tab">
       <div class="form-group">
         <label for="timeline-title">{% trans 'Title:' %}</label>
         <input type="text" id="timeline-title" value="{{title}}">
@@ -9,6 +9,37 @@
       <div class="form-group">
         <label for="timeline-description">{% trans 'Description:' %}</label>
         <textarea id="timeline-description">{{description}}</textarea>
+      </div>
+      <h2>{%trans 'Styling of Timeline Items' %}</h2>
+      <div class="form-group">
+        <span>{% trans 'Event background color' %}</span>
+        <input type="text" id="event-background-color" value="{{event_background_color}}">
+        <p>Background color of default events on the timeline (example: 'blue' or '#0000ff')</p>
+      </div>
+      <div class="form-group">
+        <span>{% trans 'Event border color' %}</span>
+        <input type="text" id="event-border-color" value="{{event_border_color}}">
+        <p>Border color of default events on the timeline (example: 'blue' or '#0000ff')</p>
+      </div>
+      <div class="form-group">
+        <span>{% trans 'Event text color' %}</span>
+        <input type="text" id="event-text-color" value="{{event_text_color}}">
+        <p>Text color of default events on the timeline (example: 'white' or '#ffffff')</p>
+      </div>
+      <div class="form-group">
+        <span>{% trans 'Milestone background color' %}</span>
+        <input type="text" id="milestone-background-color" value="{{milestone_background_color}}">
+        <p>Background color of milestone events on the timeline (example: 'blue' or '#0000ff')</p>
+      </div>
+      <div class="form-group">
+        <span>{% trans 'Milestone border color' %}</span>
+        <input type="text" id="milestone-border-color" value="{{milestone_border_color}}">
+        <p>Border color of milestone events on the timeline (example: 'blue' or '#0000ff')</p>
+      </div>
+      <div class="form-group">
+        <span>{% trans 'Milestone text color' %}</span>
+        <input type="text" id="milestone-text-color" value="{{milestone_text_color}}">
+        <p>Text color of milestone events on the timeline (example: 'white' or '#ffffff')</p>
       </div>
     </section>
     <div class="timeline-editor hidden">
@@ -32,6 +63,10 @@
             <label for="timeline-item-description">{% trans 'Description:' %}</label>
             <input type="text" id="timeline-item-description" class="tinymce-editor">
           </div>
+          <label class="checkbox-label" title="Select if item should be a milestone">
+            <input class="timeline-item-milestone" type="checkbox">
+            {% trans 'Milestone' %}
+          </label>
           <button type="button" class="save-timeline-item">{% trans 'Save item' %}</button>
         </div>
       </div>

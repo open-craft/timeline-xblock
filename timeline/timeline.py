@@ -33,11 +33,47 @@ class TimelineXBlock(XBlock, StudioContainerXBlockMixin):
 
     data = Dict(display_name="Timeline Data",
                         default={"items": [
-                                 {"id": 1, "content": "Item 1", "start": "2023-04-20", "description": "Description 1"},
-                                 {"id": 2, "content": "Item 2", "start": "2023-04-14", "description": "Description 2"}
+                                 {"id": 1, "content": "Item 1", "start": "2023-04-20", "description": "Description 1", "milestone": False},
+                                 {"id": 2, "content": "Item 2", "start": "2023-04-14", "description": "Description 2", "milestone": True}
                              ]},
                         scope=Scope.content,
                         help="Data for the timeline")
+    event_background_color = String(
+        display_name="Event Background Color",
+        default="#F0F6FA",
+        scope=Scope.settings,
+        help="Background color of default events on the timeline."
+    )
+    event_border_color = String(
+        display_name="Event Border Color",
+        default="#80B6D5",
+        scope=Scope.settings,
+        help="Border color of default events on the timeline."
+    )
+    event_text_color = String(
+        display_name="Event Text Color",
+        default="#000000",
+        scope=Scope.settings,
+        help="Text color of default events on the timeline."
+    )
+    milestone_background_color = String(
+        display_name="Milestone Background Color",
+        default="#4092BF",
+        scope=Scope.settings,
+        help="Background color of milestone events on the timeline."
+    )
+    milestone_border_color = String(
+        display_name="Milestone Border Color",
+        default="#FFFFFF",
+        scope=Scope.settings,
+        help="Border color of milestone events on the timeline."
+    )
+    milestone_text_color = String(
+        display_name="Milestone Text Color",
+        default="#FFFFFF",
+        scope=Scope.settings,
+        help="Text color of milestone events on the timeline."
+    )
 
 
     def resource_string(self, path):
@@ -63,7 +99,13 @@ class TimelineXBlock(XBlock, StudioContainerXBlockMixin):
         template = Template(template_str)
         context = {
             "title": self.title,
-            "description": self.description
+            "description": self.description,
+            "event_background_color": self.event_background_color,
+            "event_border_color": self.event_border_color,
+            "event_text_color": self.event_text_color,
+            "milestone_background_color": self.milestone_background_color,
+            "milestone_border_color": self.milestone_border_color,
+            "milestone_text_color": self.milestone_text_color
         }
         html = template.render(Context(context))
         frag = Fragment(html)
@@ -79,7 +121,13 @@ class TimelineXBlock(XBlock, StudioContainerXBlockMixin):
         template = Template(template_str)
         context = {
             "title": self.title,
-            "description": self.description
+            "description": self.description,
+            "event_background_color": self.event_background_color,
+            "event_border_color": self.event_border_color,
+            "event_text_color": self.event_text_color,
+            "milestone_background_color": self.milestone_background_color,
+            "milestone_border_color": self.milestone_border_color,
+            "milestone_text_color": self.milestone_text_color
         }
         html = template.render(Context(context))
         frag = Fragment(html)
@@ -110,6 +158,12 @@ class TimelineXBlock(XBlock, StudioContainerXBlockMixin):
         self.title = data.get('title', '')
         self.description = data.get('description', '')
         self.data = {"items": json.loads(data.get('timeline_data', '[]'))}
+        self.event_background_color = data.get('event_background_color', self.event_background_color)
+        self.event_border_color = data.get('event_border_color', self.event_border_color)
+        self.event_text_color = data.get('event_text_color', self.event_text_color)
+        self.milestone_background_color = data.get('milestone_background_color', self.milestone_background_color)
+        self.milestone_border_color = data.get('milestone_border_color', self.milestone_border_color)
+        self.milestone_text_color = data.get('milestone_text_color', self.milestone_text_color)
         return {"result": "success"}
 
 
