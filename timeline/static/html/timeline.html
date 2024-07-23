@@ -2,8 +2,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-timeline/7.4.9/vis-timeline-graph2d.min.js"></script>
 <h1>{{title}}</h1>
 <p>{{description}}</p>
-<div id="timeline"></div>
-<div id="timeline-media" class="timeline-display"></div>
+<div class="timeline-container" id="timeline-{{unique_id}}" data-unique-id="{{unique_id}}"></div>
+<div id="timeline-media-{{unique_id}}" data-unique-id="{{unique_id}}" class="timeline-display"></div>
 <style>
     .vis-item.milestone {
         background-color: {{milestone_background_color}};

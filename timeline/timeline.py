@@ -1,4 +1,5 @@
 """XBlock for displaying a customizable timeline."""
+import hashlib
 import json
 import logging
 import pkg_resources
@@ -97,7 +98,9 @@ class TimelineXBlock(XBlock, StudioContainerXBlockMixin):
         """
         template_str = self.resource_string("static/html/timeline.html")
         template = Template(template_str)
+        unique_id = hashlib.md5(str(self.scope_ids.usage_id).encode('utf-8')).hexdigest()
         context = {
+            "unique_id": unique_id,
             "title": self.title,
             "description": self.description,
             "event_background_color": self.event_background_color,

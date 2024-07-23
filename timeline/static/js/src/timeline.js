@@ -1,5 +1,6 @@
 /* Javascript for TimelineXBlock. */
 function TimelineXBlock(runtime, element) {
+    const uniqueId = $(element).find('.timeline-container').data('unique-id');
     $(function ($) { // Ensure the DOM is fully loaded
         $.ajax({
             type: "POST",
@@ -7,7 +8,7 @@ function TimelineXBlock(runtime, element) {
             data: JSON.stringify({}),
             contentType: "application/json",
             success: function(data) {
-                var container = document.getElementById('timeline');
+                const container = $(element).find(`#timeline-${uniqueId}`)[0];
                 if (!container) {
                     console.error("Timeline container not found");
                     return;
@@ -26,7 +27,7 @@ function TimelineXBlock(runtime, element) {
                 timeline.on('select', function(properties) {
                     if (properties.items.length > 0) {
                         const selectedItem = items.get(properties.items[0]);
-                        const mediaContainer = $(element).find('#timeline-media');
+                        const mediaContainer = $(element).find(`#timeline-media-${uniqueId}`);
                         mediaContainer.empty();
     
                         const title = $('<h2>').text(selectedItem.content);
