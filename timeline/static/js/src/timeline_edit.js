@@ -1,6 +1,7 @@
 function TimelineXBlockEdit(runtime, element) {
     const timelineItems = fetchTimelineData();
     let currentEditIndex = -1;
+    const titleCharacterLimit = 20;
 
     function fetchTimelineData() {
         const items = [];
@@ -25,9 +26,11 @@ function TimelineXBlockEdit(runtime, element) {
         const listContainer = $(element).find('.timeline-item-list');
         listContainer.empty();
         timelineItems.forEach((item, index) => {
+            const title = item.content || 'Untitled timeline item';
+            const displayTitle = title.length > titleCharacterLimit ? title.substring(0, titleCharacterLimit) + '...' : title;
             const listItem = $(`
                 <li data-index="${index}">
-                    <span class="timeline-item-list-title">Item (${index + 1})</span>
+                    <span class="timeline-item-list-title">${displayTitle}</span>
                 </li>
             `);
             listContainer.append(listItem);

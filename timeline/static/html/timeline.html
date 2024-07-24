@@ -5,14 +5,22 @@
 <div class="timeline-container" id="timeline-{{unique_id}}" data-unique-id="{{unique_id}}"></div>
 <div id="timeline-media-{{unique_id}}" data-unique-id="{{unique_id}}" class="timeline-display"></div>
 <style>
-    .vis-item.milestone {
-        background-color: {{milestone_background_color}};
-        border-color: {{milestone_border_color}};
-        color: {{milestone_text_color}};
+    :root {
+        --event-background-color-{{ unique_id }}: {{ event_background_color }};
+        --event-border-color-{{ unique_id }}: {{ event_border_color }};
+        --event-text-color-{{ unique_id }}: {{ event_text_color }};
+        --milestone-background-color-{{ unique_id }}: {{ milestone_background_color }};
+        --milestone-border-color-{{ unique_id }}: {{ milestone_border_color }};
+        --milestone-text-color-{{ unique_id }}: {{ milestone_text_color }};
     }
-    .vis-item.event {
-        background-color: {{event_background_color}};
-        border-color: {{event_border_color}};
-        color: {{event_text_color}};
+    #timeline-{{ unique_id }} .vis-item.milestone {
+        background-color: var(--milestone-background-color-{{ unique_id }});
+        border-color: var(--milestone-border-color-{{ unique_id }});
+        color: var(--milestone-text-color-{{ unique_id }});
+    }
+    #timeline-{{ unique_id }} .vis-item.event {
+        background-color: var(--event-background-color-{{ unique_id }});
+        border-color: var(--event-border-color-{{ unique_id }});
+        color: var(--event-text-color-{{ unique_id }});
     }
 </style>
