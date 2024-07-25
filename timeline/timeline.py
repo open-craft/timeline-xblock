@@ -7,7 +7,11 @@ from django.template import Context, Template
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Dict, String, Scope
-from xblock.utils.studio_editable import StudioContainerXBlockMixin
+
+try:
+    from xblock.utils.studio_editable import StudioContainerXBlockMixin
+except ModuleNotFoundError:  # For compatibility with Palm and earlier
+    from xblockutils.studio_editable import StudioContainerXBlockMixin
 
 logger = logging.getLogger(__name__)
 
