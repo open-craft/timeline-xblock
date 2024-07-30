@@ -3,6 +3,7 @@ function TimelineXBlockEdit(runtime, element) {
     let currentEditIndex = -1;
     const titleCharacterLimit = 20;
     let currentTabIndex = 0;
+    let initialSelectionMade = false;
 
     const tabs = [
         $(element).find('.basic-settings-tab'),
@@ -44,9 +45,10 @@ function TimelineXBlockEdit(runtime, element) {
             listContainer.append(listItem);
         });
 
-        if (timelineItems.length > 0) {
+        if (!initialSelectionMade && timelineItems.length > 0) {
             listContainer.find('li:first').addClass('selected');
             renderTimelineItemDetails(0);
+            initialSelectionMade = true;
         }
     }
 
@@ -80,6 +82,8 @@ function TimelineXBlockEdit(runtime, element) {
                 })
             }
         });
+        const errorMessageContainer = $(element).find('.error-message');
+        errorMessageContainer.hide().text('');
         currentEditIndex = index;
         const item = timelineItems[index];
         $(element).find('.timeline-item-title').text(`Item (${index + 1})`);
