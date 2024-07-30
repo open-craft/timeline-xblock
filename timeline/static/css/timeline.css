@@ -69,15 +69,13 @@
 .timeline-item-details {
     padding-top: 15px;
     margin-top: 15px;
+    width: 90%;
 }
 
 .timeline-item-details label {
     display: block;
     margin-top: 10px;
-}
-
-.timeline-item-details input {
-    width: 100%;
+    font-size: 14px;
 }
 
 .timeline-item-details button {
@@ -95,6 +93,7 @@
 .form-group label {
     display: block;
     margin-bottom: 5px;
+    font-size: 14px;
 }
 
 .form-group input,
@@ -132,7 +131,7 @@
 
 .timeline-display {
     display: none;
-    padding: 10px;
+    padding: 20px;
     border: 1px solid #ddd;
     margin-top: 20px;
     background: #0A3055;
@@ -152,10 +151,15 @@
     padding: 5px 10px;
 }
 
-.basic-settings-tab h2 {
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+.styling-settings-tab h2 {
+    padding-top: 10px;
+    padding-bottom: 5px;
     font-weight: 600;
+}
+
+.styling-settings-tab p {
+    font-size: small;
+    padding-bottom: 5px;
 }
 
 .checkbox-label {
@@ -169,4 +173,16 @@
 
 .form-group p {
     font-size: small;
+}
+
+.events-styling {
+    border-bottom: 1px solid #ddd;
+}
+
+.timeline-item-content {
+    width: 40%;
+}
+
+.timeline-item-date {
+    width: 15%;
 }
