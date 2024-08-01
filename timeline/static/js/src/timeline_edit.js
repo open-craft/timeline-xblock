@@ -1,7 +1,7 @@
 function TimelineXBlockEdit(runtime, element) {
     const timelineItems = fetchTimelineData();
     let currentEditIndex = -1;
-    const titleCharacterLimit = 20;
+    const titleCharacterLimit = 25;
     let currentTabIndex = 0;
     let initialSelectionMade = false;
 
