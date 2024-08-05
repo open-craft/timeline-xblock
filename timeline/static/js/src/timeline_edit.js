@@ -1,7 +1,15 @@
 function TimelineXBlockEdit(runtime, element) {
     const timelineItems = fetchTimelineData();
     let currentEditIndex = -1;
-    const titleCharacterLimit = 20;
+    const titleCharacterLimit = 25;
+    let currentTabIndex = 0;
+    let initialSelectionMade = false;
+
+    const tabs = [
+        $(element).find('.basic-settings-tab'),
+        $(element).find('.styling-settings-tab'),
+        $(element).find('.timeline-editor')
+    ];
 
     function fetchTimelineData() {
         const items = [];
@@ -26,15 +34,22 @@ function TimelineXBlockEdit(runtime, element) {
         const listContainer = $(element).find('.timeline-item-list');
         listContainer.empty();
         timelineItems.forEach((item, index) => {
-            const title = item.content || 'Untitled timeline item';
+            const title = item.content || `Item (${index + 1})`;
             const displayTitle = title.length > titleCharacterLimit ? title.substring(0, titleCharacterLimit) + '...' : title;
             const listItem = $(`
-                <li data-index="${index}">
+                <li data-index="${index}" style="display: flex; justify-content: space-between; align-items: center;">
                     <span class="timeline-item-list-title">${displayTitle}</span>
+                    <span class="icon fa fa-trash-o delete-timeline-item"></span>
                 </li>
             `);
             listContainer.append(listItem);
         });
+
+        if (!initialSelectionMade && timelineItems.length > 0) {
+            listContainer.find('li:first').addClass('selected');
+            renderTimelineItemDetails(0);
+            initialSelectionMade = true;
+        }
     }
 
     function renderTimelineItemDetails(index) {
@@ -46,6 +61,7 @@ function TimelineXBlockEdit(runtime, element) {
             selector: '#timeline-item-description',
             plugins: 'image media',
             toolbar: 'image media',
+            menubar: 'edit format',
             theme: 'silver',
             skin: 'studio-tmce5',
             content_css: 'studio-tmce5',
@@ -61,8 +77,13 @@ function TimelineXBlockEdit(runtime, element) {
                     const item = timelineItems[index];
                     editor.setContent(item.description);
                 });
+                editor.on('change', function () {
+                    saveTimelineItemData();
+                })
             }
         });
+        const errorMessageContainer = $(element).find('.error-message');
+        errorMessageContainer.hide().text('');
         currentEditIndex = index;
         const item = timelineItems[index];
         $(element).find('.timeline-item-title').text(`Item (${index + 1})`);
@@ -74,7 +95,37 @@ function TimelineXBlockEdit(runtime, element) {
     }
 
     function collectTimelineData() {
-        return timelineItems;
+        return timelineItems.filter(item => item.content && item.start);
+    }
+
+    function showTab(index) {
+        tabs.forEach((tab, idx) => {
+            tab.toggleClass('hidden', idx !== index);
+        });
+        $(element).find('.back-button').toggleClass('hidden', index === 0);
+        $(element).find('.continue-button').toggleClass('hidden', index === tabs.length - 1);
+        $(element).find('.save-button').parent().toggleClass('hidden', index !== tabs.length - 1);
+    }
+
+    function saveTimelineItemData() {
+        const errorMessageContainer = $(element).find('.error-message');
+        errorMessageContainer.hide().text('');
+
+        if (currentEditIndex >= 0) {
+            const title = $(element).find('#timeline-item-content').val();
+            const date = $(element).find('#timeline-item-date').val();
+
+            if (title && date) {
+                timelineItems[currentEditIndex].start = date;
+                timelineItems[currentEditIndex].content = title;
+                timelineItems[currentEditIndex].description = tinymce.get('timeline-item-description').getContent();
+                timelineItems[currentEditIndex].milestone = $(element).find('.timeline-item-milestone').prop('checked');
+                renderTimelineItemList();
+            } else {
+                errorMessageContainer.text('Title and Date are required.').show();
+                errorMessageContainer[0].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     }
 
     $(element).on('click', '.timeline-item-list li', function() {
@@ -91,22 +142,29 @@ function TimelineXBlockEdit(runtime, element) {
         renderTimelineItemDetails(timelineItems.length - 1);
     });
 
-    $(element).on('click', '.save-timeline-item', function() {
-        if (currentEditIndex >= 0) {
-            timelineItems[currentEditIndex].start = $(element).find('#timeline-item-date').val();
-            timelineItems[currentEditIndex].content = $(element).find('#timeline-item-content').val();
-            timelineItems[currentEditIndex].description = tinymce.get('timeline-item-description').getContent();
-            timelineItems[currentEditIndex].milestone = $(element).find('.timeline-item-milestone').prop('checked');
-            renderTimelineItemList();
-            $(element).find('.timeline-item-details').hide();
-        }
+    $(element).on('input change', '#timeline-item-date, #timeline-item-content, .timeline-item-milestone', function() {
+        saveTimelineItemData();
     });
 
     $(element).find('.continue-button').bind('click', function() {
-        $(element).find('.basic-settings-tab').addClass('hidden');
-        $(element).find('.timeline-editor').removeClass('hidden');
-        $(this).addClass('hidden');
-        $(element).find('.save-button').parent().removeClass('hidden');
+        if (currentTabIndex < tabs.length - 1) {
+            currentTabIndex++;
+            showTab(currentTabIndex);
+        }
+    });
+
+    $(element).find('.back-button').bind('click', function() {
+        if (currentTabIndex > 0) {
+            currentTabIndex--;
+            showTab(currentTabIndex);
+        }
+    });
+
+    $(element).on('click', '.delete-timeline-item', function() {
+        const index = $(this).parent().data('index');
+        timelineItems.splice(index, 1);
+        renderTimelineItemList();
+        $(element).find('.timeline-item-details').hide();
     });
 
     $(element).find('.save-button').bind('click', function() {
@@ -156,4 +214,6 @@ function TimelineXBlockEdit(runtime, element) {
     } else {
         $(element).find('.timeline-item-details').hide();
     }
+
+    showTab(currentTabIndex);
 }
