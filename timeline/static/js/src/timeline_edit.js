@@ -59,9 +59,9 @@ function TimelineXBlockEdit(runtime, element) {
         tinymce.baseURL = baseUrl + "js/vendor/tinymce/js/tinymce";
         tinymce.init({ 
             selector: '#timeline-item-description',
-            plugins: 'image media',
-            toolbar: 'image media',
-            menubar: 'edit format',
+            plugins: 'image media link',
+            toolbar: 'image media link',
+            menubar: 'edit format insert',
             theme: 'silver',
             skin: 'studio-tmce5',
             content_css: 'studio-tmce5',
@@ -70,6 +70,7 @@ function TimelineXBlockEdit(runtime, element) {
             external_plugins: {
                 'image': baseUrl + "js/vendor/tinymce/js/tinymce/" + "plugins/image/plugin.min.js",
                 'media': baseUrl + "js/vendor/tinymce/js/tinymce/plugins/media/plugin.min.js",
+                'link': baseUrl + "js/vendor/tinymce/js/tinymce/plugins/link/plugin.min.js",
             },
             setup: function (editor) {
                 editor.on('init', function () {
