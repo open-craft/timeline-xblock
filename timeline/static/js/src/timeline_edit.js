@@ -59,9 +59,9 @@ function TimelineXBlockEdit(runtime, element) {
         tinymce.baseURL = baseUrl + "js/vendor/tinymce/js/tinymce";
         tinymce.init({ 
             selector: '#timeline-item-description',
-            plugins: 'image media',
-            toolbar: 'image media',
-            menubar: 'edit format',
+            plugins: 'image media link',
+            toolbar: 'image media link',
+            menubar: 'edit format insert',
             theme: 'silver',
             skin: 'studio-tmce5',
             content_css: 'studio-tmce5',
@@ -70,6 +70,7 @@ function TimelineXBlockEdit(runtime, element) {
             external_plugins: {
                 'image': baseUrl + "js/vendor/tinymce/js/tinymce/" + "plugins/image/plugin.min.js",
                 'media': baseUrl + "js/vendor/tinymce/js/tinymce/plugins/media/plugin.min.js",
+                'link': baseUrl + "js/vendor/tinymce/js/tinymce/plugins/link/plugin.min.js",
             },
             setup: function (editor) {
                 editor.on('init', function () {
@@ -105,6 +106,9 @@ function TimelineXBlockEdit(runtime, element) {
         $(element).find('.back-button').toggleClass('hidden', index === 0);
         $(element).find('.continue-button').toggleClass('hidden', index === tabs.length - 1);
         $(element).find('.save-button').parent().toggleClass('hidden', index !== tabs.length - 1);
+
+        // Reset scroll position when switching tabs
+        $(element).find('.timeline-builder').scrollTop(0);
     }
 
     function saveTimelineItemData() {
@@ -146,14 +150,18 @@ function TimelineXBlockEdit(runtime, element) {
         saveTimelineItemData();
     });
 
-    $(element).find('.continue-button').bind('click', function() {
+    $(element).find('.continue-button').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         if (currentTabIndex < tabs.length - 1) {
             currentTabIndex++;
             showTab(currentTabIndex);
         }
     });
 
-    $(element).find('.back-button').bind('click', function() {
+    $(element).find('.back-button').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         if (currentTabIndex > 0) {
             currentTabIndex--;
             showTab(currentTabIndex);
@@ -167,7 +175,9 @@ function TimelineXBlockEdit(runtime, element) {
         $(element).find('.timeline-item-details').hide();
     });
 
-    $(element).find('.save-button').bind('click', function() {
+    $(element).find('.save-button').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         const handlerUrl = runtime.handlerUrl(element, 'save_timeline');
         const data = {
             title: $(element).find('#timeline-title').val(),
@@ -201,7 +211,9 @@ function TimelineXBlockEdit(runtime, element) {
         });
     });
 
-    $(element).find('.cancel-button').bind('click', function () {
+    $(element).find('.cancel-button').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
         if ('notify' in runtime) { //xblock workbench runtime does not have `notify` method
             runtime.notify('cancel', {});
         }
