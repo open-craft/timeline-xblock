@@ -129,17 +129,35 @@
     padding-bottom: 30px;
 }
 
-.timeline-display {
+.timeline-display, .timeline-messages div[role="status"] {
     display: none;
-    padding: 20px;
     border: 1px solid #ddd;
+
+}
+
+.timeline-messages div[role="status"] {
+    background: #ddd;
+    color: black;
+    padding: 5px;
+}
+
+.timeline-display {
+    color: white;
+    padding: 20px;
     margin-top: 20px;
     background: #0A3055;
-    color: white;
 }
 
 .timeline-display h2 {
     color: white;
+}
+
+.timeline-container.overflow-start {
+    border-left: 2px dotted red;
+}
+
+.timeline-container.overflow-end {
+    border-right: 2px dotted red;
 }
 
 .save-timeline-item {
