@@ -1,9 +1,9 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/vis-timeline/7.4.9/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-timeline/7.4.9/vis-timeline-graph2d.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/vis-timeline/8.3.1/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-timeline/8.3.1/vis-timeline-graph2d.min.js"></script>
 <h1>{{title}}</h1>
 <p>{{description}}</p>
-<div class="timeline-container" id="timeline-{{unique_id}}" data-unique-id="{{unique_id}}"></div>
-<div id="timeline-media-{{unique_id}}" data-unique-id="{{unique_id}}" class="timeline-display"></div>
+<div class="timeline-container" id="timeline-{{unique_id}}" data-unique-id="{{unique_id}}" role="tablist" tabindex="0"></div>
+<div id="timeline-media-{{unique_id}}" data-unique-id="{{unique_id}}" class="timeline-display" aria-live="polite"></div>
 <style>
     :root {
         --event-background-color-{{ unique_id }}: {{ event_background_color }};
