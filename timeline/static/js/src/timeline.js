@@ -2,11 +2,19 @@
 function TimelineXBlock(runtime, element) {
     const uniqueId = $(element).find('.timeline-container').data('unique-id');
     const container = $(element).find(`#timeline-${uniqueId}`);
+    const helpPanel = $(element).find(`#help-text-${uniqueId}`);
+    const helpButton = $(element).find(`#help-btn-${uniqueId}`);
     let timeline;
+
+    helpButton.on("click", () => {
+        helpPanel.toggle();
+        helpButton.attr('aria-expanded', helpPanel.is(':visible'));
+    });
 
     const handleKeys = (item = null) => (event) => {
         if (!timeline) return;
         switch (event.key) {
+            case 'Space':
             case 'Enter':
                 if (item) {
                     timeline.setSelection(item.id);
@@ -14,18 +22,20 @@ function TimelineXBlock(runtime, element) {
                 }
                 break;
             case 'ArrowRight': {
+                let period = event.ctrlKey ? 'week': 'day';
                 let { start, end } = timeline.getWindow();
                 timeline.setWindow(
-                  vis.moment(start).add(1, 'week'),
-                  vis.moment(end).add(1, 'week'),
+                  vis.moment(start).add(1, period),
+                  vis.moment(end).add(1, period),
                 );
                 break;
             }
             case 'ArrowLeft': {
+                let period = event.ctrlKey ? 'week': 'day';
                 let { start, end } = timeline.getWindow();
                 timeline.setWindow(
-                  vis.moment(start).subtract(1, 'week'),
-                  vis.moment(end).subtract(1, 'week'),
+                  vis.moment(start).subtract(1, period),
+                  vis.moment(end).subtract(1, period),
                 );
                 break;
             }
@@ -81,7 +91,7 @@ function TimelineXBlock(runtime, element) {
                     console.error("Timeline container not found");
                     return;
                 }
-                const items = processDataItems(fakeData);
+                const items = processDataItems(data);
                 const options = {
                     order: (a, b) => a.start - b.start,
                     template: itemTemplate,
