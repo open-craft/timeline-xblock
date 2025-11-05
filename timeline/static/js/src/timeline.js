@@ -14,7 +14,7 @@ function TimelineXBlock(runtime, element) {
     const handleKeys = (item = null) => (event) => {
         if (!timeline) return;
         switch (event.key) {
-            case 'Space':
+            case ' ':
             case 'Enter':
                 if (item) {
                     timeline.setSelection(item.id);
@@ -48,7 +48,11 @@ function TimelineXBlock(runtime, element) {
             case '=':
                 timeline.fit();
                 break;
+            default:
+                return;
         }
+        event.preventDefault();
+        event.stopPropagation();
     };
     container.on('keydown', handleKeys());
 
