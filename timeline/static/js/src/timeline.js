@@ -2,9 +2,54 @@
 function TimelineXBlock(runtime, element) {
     const uniqueId = $(element).find('.timeline-container').data('unique-id');
     const container = $(element).find(`#timeline-${uniqueId}`);
+    const messages = $(element).find(`#timeline-messages-${uniqueId}>[role=status]`);
     const helpPanel = $(element).find(`#help-text-${uniqueId}`);
     const helpButton = $(element).find(`#help-btn-${uniqueId}`);
-    let timeline;
+    const itemTemplate = (item) => {
+        return $(`<div class="event-item" tabindex="0" role="tab" aria-expanded="false" aria-describedby="timeline-media-${uniqueId}">`)
+          .html(`${item.content} <span class="event-date sr-only">Date ${item.start.toLocaleDateString()}</span>`)
+          .on('keydown', handleKeys(item))[0];
+    };
+    const options = {
+        order: (a, b) => a.start - b.start,
+        template: itemTemplate,
+    };
+    const timeline = new vis.Timeline(container[0]);
+    let startDate = null;
+    let endDate = null;
+    let items = [];
+    timeline.setOptions(options);
+
+    timeline.on('select', function(properties) {
+        if (properties.items.length > 0) {
+            const selectedItem = items.get(properties.items[0]);
+            showItemDetails(selectedItem);
+            container.find('.event-item').attr('aria-expanded', 'false');
+            properties.event.target.attr('aria-expanded', 'true');
+        }
+    });
+
+    timeline.on('rangechanged', function({ start, end }) {
+        if (start === null || end === null) return;
+        const overflowStart = start > startDate;
+        const overflowEnd = end < endDate;
+        const message = `More events on the ${overflowStart ? 'left' : ''} ${overflowStart && overflowEnd ? 'and the': ''} ${overflowEnd ? 'right' : ''}`
+        if (overflowStart) {
+            container.addClass('overflow-start');
+        } else {
+            container.removeClass('overflow-start');
+        }
+        if (overflowEnd) {
+            container.addClass('overflow-end');
+        } else {
+            container.removeClass('overflow-end');
+        }
+        if (overflowStart || overflowEnd) {
+            messages.empty().text(message).show();
+        } else {
+            messages.hide();
+        }
+    })
 
     helpButton.on("click", () => {
         helpPanel.toggle();
@@ -56,15 +101,11 @@ function TimelineXBlock(runtime, element) {
     };
     container.on('keydown', handleKeys());
 
-    const itemTemplate = (item) => {
-        return $(`<div class="event-item" tabindex="0" role="tab" aria-expanded="false" aria-describedby="timeline-media-${uniqueId}">`)
-          .html(`${item.content} <span class="event-date sr-only">Date ${item.start.toLocaleDateString()}</span>`)
-          .on('keydown', handleKeys(item))[0];
-    };
-
     function processDataItems(data) {
         data.forEach(item => {
             item.start = vis.moment(item.start);
+            startDate = startDate === null || item.start < startDate ? item.start : startDate ;
+            endDate = endDate === null || item.start > endDate ? item.start : endDate ;
             if (item.milestone) {
                 item.className = 'milestone';
             } else {
@@ -95,21 +136,8 @@ function TimelineXBlock(runtime, element) {
                     console.error("Timeline container not found");
                     return;
                 }
-                const items = processDataItems(data);
-                const options = {
-                    order: (a, b) => a.start - b.start,
-                    template: itemTemplate,
-                };
-                timeline = new vis.Timeline(container[0], items, options);
-
-                timeline.on('select', function(properties) {
-                    if (properties.items.length > 0) {
-                        const selectedItem = items.get(properties.items[0]);
-                        showItemDetails(selectedItem);
-                        container.find('.event-item').attr('aria-expanded', 'false');
-                        properties.event.target.attr('aria-expanded', 'true');
-                    }
-                });
+                items = processDataItems(data);
+                timeline.setItems(items);
             },
             error: function(xhr, status, error) {
                 console.error("Error fetching data: ", error);
