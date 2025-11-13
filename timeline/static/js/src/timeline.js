@@ -5,56 +5,10 @@ function TimelineXBlock(runtime, element) {
     const messages = $(element).find(`#timeline-messages-${uniqueId}>[role=status]`);
     const helpPanel = $(element).find(`#help-text-${uniqueId}`);
     const helpButton = $(element).find(`#help-btn-${uniqueId}`);
-    const itemTemplate = (item) => {
-        return $(`<div class="event-item" tabindex="0" role="tab" aria-expanded="false" aria-describedby="timeline-media-${uniqueId}">`)
-          .html(`${item.content} <span class="event-date sr-only">Date ${item.start.toLocaleDateString()}</span>`)
-          .on('keydown', handleKeys(item))[0];
-    };
-    const options = {
-        order: (a, b) => a.start - b.start,
-        template: itemTemplate,
-    };
-    const timeline = new vis.Timeline(container[0]);
+    const items = new vis.DataSet();
+    let timeline = new vis.Timeline(container[0], items);
     let startDate = null;
     let endDate = null;
-    let items = [];
-    timeline.setOptions(options);
-
-    timeline.on('select', function(properties) {
-        if (properties.items.length > 0) {
-            const selectedItem = items.get(properties.items[0]);
-            showItemDetails(selectedItem);
-            container.find('.event-item').attr('aria-expanded', 'false');
-            properties.event.target.attr('aria-expanded', 'true');
-        }
-    });
-
-    timeline.on('rangechanged', function({ start, end }) {
-        if (start === null || end === null) return;
-        const overflowStart = start > startDate;
-        const overflowEnd = end < endDate;
-        const message = `More events on the ${overflowStart ? 'left' : ''} ${overflowStart && overflowEnd ? 'and the': ''} ${overflowEnd ? 'right' : ''}`
-        if (overflowStart) {
-            container.addClass('overflow-start');
-        } else {
-            container.removeClass('overflow-start');
-        }
-        if (overflowEnd) {
-            container.addClass('overflow-end');
-        } else {
-            container.removeClass('overflow-end');
-        }
-        if (overflowStart || overflowEnd) {
-            messages.empty().text(message).show();
-        } else {
-            messages.hide();
-        }
-    })
-
-    helpButton.on("click", () => {
-        helpPanel.toggle();
-        helpButton.attr('aria-expanded', helpPanel.is(':visible'));
-    });
 
     const handleKeys = (item = null) => (event) => {
         if (!timeline) return;
@@ -99,6 +53,53 @@ function TimelineXBlock(runtime, element) {
         event.preventDefault();
         event.stopPropagation();
     };
+
+    const itemTemplate = (item) => {
+        return $(`<div class="event-item" tabindex="0" role="tab" aria-expanded="false" aria-describedby="timeline-media-${uniqueId}">`)
+          .html(`${item.content} <span class="event-date sr-only">Date ${item.start.toLocaleDateString()}</span>`)
+          .on('keydown', handleKeys(item))[0];
+    };
+
+    const options = {
+        order: (a, b) => a.start - b.start,
+        template: itemTemplate,
+    };
+    timeline.setOptions(options);
+    timeline.on('select', function(properties) {
+        if (properties.items.length > 0) {
+            const selectedItem = items.get(properties.items[0]);
+            showItemDetails(selectedItem);
+            container.find('.event-item').attr('aria-expanded', 'false');
+            properties.event.target.attr('aria-expanded', 'true');
+        }
+    });
+
+    timeline.on('rangechanged', function({ start, end }) {
+        if (start === null || end === null) return;
+        const overflowStart = start > startDate;
+        const overflowEnd = end < endDate;
+        const message = `More events on the ${overflowStart ? 'left' : ''} ${overflowStart && overflowEnd ? 'and the': ''} ${overflowEnd ? 'right' : ''}`
+        if (overflowStart) {
+            container.addClass('overflow-start');
+        } else {
+            container.removeClass('overflow-start');
+        }
+        if (overflowEnd) {
+            container.addClass('overflow-end');
+        } else {
+            container.removeClass('overflow-end');
+        }
+        if (overflowStart || overflowEnd) {
+            messages.empty().text(message).show();
+        } else {
+            messages.hide();
+        }
+    })
+
+    helpButton.on("click", () => {
+        helpPanel.toggle();
+        helpButton.attr('aria-expanded', helpPanel.is(':visible'));
+    });
     container.on('keydown', handleKeys());
 
     function processDataItems(data) {
@@ -112,7 +113,7 @@ function TimelineXBlock(runtime, element) {
                 item.className = 'event';
             }
         });
-        return new vis.DataSet(data);
+        return data;
     }
 
     function showItemDetails(selectedItem) {
@@ -136,8 +137,10 @@ function TimelineXBlock(runtime, element) {
                     console.error("Timeline container not found");
                     return;
                 }
-                items = processDataItems(data);
-                timeline.setItems(items);
+                items.clear();
+                items.add(processDataItems(data));
+                timeline.setOptions({min: startDate.subtract(1, 'month'), max: endDate.add(1, 'month')})
+                timeline.fit();
             },
             error: function(xhr, status, error) {
                 console.error("Error fetching data: ", error);
