@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+eggs/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+.direnv/
+.env/
+ENV/
+
+# IDE
+.idea/
+*.swp
+*.swo
+.vscode/
+.fleet/

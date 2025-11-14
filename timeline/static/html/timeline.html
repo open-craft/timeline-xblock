@@ -1,9 +1,24 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/vis-timeline/7.4.9/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-timeline/7.4.9/vis-timeline-graph2d.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/vis-timeline/8.3.1/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-timeline/8.3.1/vis-timeline-graph2d.min.js"></script>
 <h1>{{title}}</h1>
 <p>{{description}}</p>
-<div class="timeline-container" id="timeline-{{unique_id}}" data-unique-id="{{unique_id}}"></div>
-<div id="timeline-media-{{unique_id}}" data-unique-id="{{unique_id}}" class="timeline-display"></div>
+<button id="help-btn-{{unique_id}}" aria-controls="help-text-{{unique_id}}" title="Keyboard Shortcuts Help" class="btn btn-link" aria-expanded="false">
+<span class="fa fa-question"/>
+</button>
+<div aria-live="polite">
+    <div id="help-text-{{unique_id}}" role="status" style="display: none;">
+        Press <kbd>Enter</kbd> or <kbd>Space</kbd> to select item.<br>
+        Press <kbd>+</kbd> key to zoom in and <kbd>-</kbd> key to zoom out.<br>
+        Press <kbd>=</kbd> key to reset zoom.<br>
+        Press <kbd>Left</kbd> and <kbd>Right</kbd> keys to slide viewport by one day.<br>
+        Hold <kbd>Ctrl</kbd> with <kbd>Left</kbd> or <kbd>Right</kbd> keys to slide viewport by one week.
+    </div>
+</div>
+<div class="timeline-container" id="timeline-{{unique_id}}" data-unique-id="{{unique_id}}" role="tablist" tabindex="0"></div>
+<div class="timeline-messages" id="timeline-messages-{{unique_id}}" aria-live="polite">
+    <div role="status" style="display: none"></div>
+</div>
+<div id="timeline-media-{{unique_id}}" data-unique-id="{{unique_id}}" class="timeline-display" aria-live="polite"></div>
 <style>
     :root {
         --event-background-color-{{ unique_id }}: {{ event_background_color }};
