@@ -70,7 +70,7 @@ function TimelineXBlock(runtime, element) {
             const selectedItem = items.get(properties.items[0]);
             showItemDetails(selectedItem);
             container.find('.event-item').attr('aria-expanded', 'false');
-            properties.event.target.attr('aria-expanded', 'true');
+            $(properties.event.target).attr('aria-expanded', 'true');
         }
     });
 
@@ -78,7 +78,17 @@ function TimelineXBlock(runtime, element) {
         if (start === null || end === null) return;
         const overflowStart = start > startDate;
         const overflowEnd = end < endDate;
-        const message = `More events on the ${overflowStart ? 'left' : ''} ${overflowStart && overflowEnd ? 'and the': ''} ${overflowEnd ? 'right' : ''}`
+        console.log({
+            start,
+            startDate,
+            overflowStart
+        });
+        console.log({
+            end,
+            endDate,
+            overflowEnd
+        });
+        const message = `More events on the ${overflowStart ? 'left' : ''}${overflowStart && overflowEnd ? ' and the ' : ''}${overflowEnd ? 'right' : ''}`;
         if (overflowStart) {
             container.addClass('overflow-start');
         } else {
@@ -139,7 +149,11 @@ function TimelineXBlock(runtime, element) {
                 }
                 items.clear();
                 items.add(processDataItems(data));
-                timeline.setOptions({min: startDate.subtract(1, 'month'), max: endDate.add(1, 'month')})
+
+                timeline.setOptions({
+                    min: startDate.clone().subtract(3, 'month'),
+                    max: endDate.clone().add(3, 'month')
+                });
                 timeline.fit();
             },
             error: function(xhr, status, error) {
