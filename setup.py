@@ -24,8 +24,8 @@ def package_data(pkg, roots):
 
 setup(
     name='timeline-xblock',
-    version='0.1',
-    description='timeline XBlock',
+    version='0.2',
+    description='Timeline XBlock',
     license='Apache 2.0',
     packages=[
         'timeline',
