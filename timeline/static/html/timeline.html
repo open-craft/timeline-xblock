@@ -1,46 +1,12 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/vis-timeline/8.3.1/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-timeline/8.3.1/vis-timeline-graph2d.min.js"></script>
+<link title="timeline-styles" rel="stylesheet"
+      href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+<script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
 <h1>{{title}}</h1>
 <p>{{description}}</p>
-<button id="help-btn-{{unique_id}}" aria-controls="help-text-{{unique_id}}" title="Keyboard Shortcuts Help" class="btn btn-link" aria-expanded="false">
-<span class="fa fa-question"/>
-</button>
-<div aria-live="polite">
-    <div id="help-text-{{unique_id}}" role="status" style="display: none;">
-        Press <kbd>Enter</kbd> or <kbd>Space</kbd> to select item.<br>
-        Press <kbd>+</kbd> key to zoom in and <kbd>-</kbd> key to zoom out.<br>
-        Press <kbd>=</kbd> key to reset zoom.<br>
-        Press <kbd>Left</kbd> and <kbd>Right</kbd> keys to slide viewport by one day.<br>
-        Hold <kbd>Ctrl</kbd> with <kbd>Left</kbd> or <kbd>Right</kbd> keys to slide viewport by one week.
-    </div>
-</div>
-<div class="timeline-container" id="timeline-{{unique_id}}" data-unique-id="{{unique_id}}" role="tablist" tabindex="0"></div>
-<div class="timeline-messages" id="timeline-messages-{{unique_id}}" aria-live="polite">
-    <div role="status" style="display: none"></div>
-</div>
-<div id="timeline-media-{{unique_id}}" data-unique-id="{{unique_id}}" class="timeline-display" aria-live="polite"></div>
-<style>
-    :root {
-        --event-background-color-{{ unique_id }}: {{ event_background_color }};
-        --event-border-color-{{ unique_id }}: {{ event_border_color }};
-        --event-text-color-{{ unique_id }}: {{ event_text_color }};
-        --milestone-background-color-{{ unique_id }}: {{ milestone_background_color }};
-        --milestone-border-color-{{ unique_id }}: {{ milestone_border_color }};
-        --milestone-text-color-{{ unique_id }}: {{ milestone_text_color }};
-    }
-    #timeline-{{ unique_id }} .vis-item.milestone {
-        background-color: var(--milestone-background-color-{{ unique_id }});
-        border-color: var(--milestone-border-color-{{ unique_id }});
-        color: var(--milestone-text-color-{{ unique_id }});
-    }
-    #timeline-{{ unique_id }} .vis-item.event {
-        background-color: var(--event-background-color-{{ unique_id }});
-        border-color: var(--event-border-color-{{ unique_id }});
-        color: var(--event-text-color-{{ unique_id }});
-    }
-    #timeline-{{ unique_id }} .vis-item.vis-selected {
-        background-color: #0A3055;
-        border-color: #FFA500;
-        color: #FFFFFF;
-    }
-</style>
+
+<link title="timeline-styles" rel="stylesheet"
+      href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+
+<script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
+
+<div id='timeline-embed' style="width:100%; height: 600px"></div>
