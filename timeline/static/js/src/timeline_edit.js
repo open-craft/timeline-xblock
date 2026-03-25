@@ -57,7 +57,7 @@ function TimelineXBlockEdit(runtime, element) {
             tinymce.activeEditor.remove();
         }
         tinymce.baseURL = baseUrl + "js/vendor/tinymce/js/tinymce";
-        tinymce.init({ 
+        tinymce.init({
             selector: '#timeline-item-description',
             plugins: 'image media link',
             toolbar: 'image media link',
@@ -217,6 +217,18 @@ function TimelineXBlockEdit(runtime, element) {
         if ('notify' in runtime) { //xblock workbench runtime does not have `notify` method
             runtime.notify('cancel', {});
         }
+    });
+    $(element).find('#select-test-url').on('click', function (e) {
+        window.open(
+          'http://apps.local.openedx.io:2001/authoring/course/course-v1:opencraft+test+xblocks/assets?filePicker=1',
+          '_blank',
+          'popup,width=1280,height=960'
+        );
+        window.addEventListener('message', function ({ data }) {
+            if (data.type === 'org.openedx.assets.selected.v1') {
+                $(element).find('#url-test').val(data.data[0].externalUrl);
+            }
+        });
     });
 
     // Initial rendering
