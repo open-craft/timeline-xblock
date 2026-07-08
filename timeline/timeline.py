@@ -2,6 +2,7 @@
 import hashlib
 import json
 import logging
+import re
 import pkg_resources
 from django.template import Context, Template
 from web_fragments.fragment import Fragment
@@ -14,6 +15,11 @@ except ModuleNotFoundError:  # For compatibility with Palm and earlier
     from xblockutils.studio_editable import StudioContainerXBlockMixin
 
 logger = logging.getLogger(__name__)
+
+
+def _strip_html_tags(text):
+    """Replace HTML tags in the given text with spaces."""
+    return re.sub(r"<[^>]+>", " ", text)
 
 
 @XBlock.wants('i18n')
@@ -173,6 +179,28 @@ class TimelineXBlock(XBlock, StudioContainerXBlockMixin):
         self.milestone_text_color = data.get('milestone_text_color', self.milestone_text_color)
         return {"result": "success"}
 
+    def index_dictionary(self):
+        """
+        Return dictionary prepared with block content and type for indexing.
+        """
+        xblock_body = super().index_dictionary()
+        items = (self.data or {}).get("items") or []
+        items_text = " ".join(
+            f"{it.get('content') or ''} {_strip_html_tags(it.get('description') or '')}"
+            for it in items if isinstance(it, dict)
+        )
+        index_body = {
+            "display_name": self.display_name,
+            "title": self.title or "",
+            "description": self.description or "",
+            "timeline_content": " ".join(items_text.split()),
+        }
+        if "content" in xblock_body:
+            xblock_body["content"].update(index_body)
+        else:
+            xblock_body["content"] = index_body
+        xblock_body["content_type"] = "Timeline"
+        return xblock_body
 
     @staticmethod
     def workbench_scenarios():
