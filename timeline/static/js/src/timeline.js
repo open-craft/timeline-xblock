@@ -1,5 +1,28 @@
 /* Javascript for TimelineXBlock. */
 function TimelineXBlock(runtime, element) {
+    if (typeof vis === 'undefined') {
+        // The vis-timeline UMD bundle registers as an anonymous AMD module when
+        // a global `define` exists (as on the learning-core runtime page),
+        // leaving `window.vis` unset — so load it with AMD disabled.
+        window._timelineVisQueue = window._timelineVisQueue || [];
+        window._timelineVisQueue.push(function () { TimelineXBlock(runtime, element); });
+        if (window._timelineVisLoading) return;
+        window._timelineVisLoading = true;
+        const amdDefine = window.define;
+        window.define = undefined;
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/vis-timeline/8.3.1/vis-timeline-graph2d.min.js';
+        script.onload = function () {
+            window.define = amdDefine;
+            window._timelineVisQueue.splice(0).forEach(function (cb) { cb(); });
+        };
+        script.onerror = function () {
+            window.define = amdDefine;
+            console.error('Failed to load vis-timeline');
+        };
+        document.head.appendChild(script);
+        return;
+    }
     const uniqueId = $(element).find('.timeline-container').data('unique-id');
     const container = $(element).find(`#timeline-${uniqueId}`);
     const messages = $(element).find(`#timeline-messages-${uniqueId}>[role=status]`);
