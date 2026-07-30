@@ -205,3 +205,11 @@
 .timeline-item-date {
     width: 15%;
 }
+
+.xblock-iframe-content .timeline-builder {
+    position: static;
+    height: auto;
+    overflow-y: visible;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}

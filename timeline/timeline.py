@@ -1,8 +1,9 @@
 """XBlock for displaying a customizable timeline."""
 import hashlib
+import html
 import json
 import logging
-import re
+import nh3
 import pkg_resources
 from django.template import Context, Template
 from web_fragments.fragment import Fragment
@@ -18,8 +19,9 @@ logger = logging.getLogger(__name__)
 
 
 def _strip_html_tags(text):
-    """Replace HTML tags in the given text with spaces."""
-    return re.sub(r"<[^>]+>", " ", text)
+    """Reduce HTML to searchable plain text; script/style contents are dropped."""
+    text = (text or "").replace("<", " <")
+    return " ".join(html.unescape(nh3.clean(text, tags=set())).split())
 
 
 @XBlock.wants('i18n')

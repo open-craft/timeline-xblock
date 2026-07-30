@@ -32,6 +32,7 @@ setup(
     ],
     install_requires=[
         'XBlock',
+        'nh3',
     ],
     entry_points={
         'xblock.v1': [
